@@ -16,16 +16,11 @@ class TranslateCommand extends Command
      * @var Translate
      */
     private $translate;
-    /**
-     * @var OffsetEncodingAlgorithm
-     */
-    private $offsetEncodingAlgorithm;
 
     public function __construct(Translate $translate, OffsetEncodingAlgorithm $offsetEncodingAlgorithm, string $name = null)
     {
         parent::__construct($name);
         $this->translate = $translate;
-        $this->offsetEncodingAlgorithm = $offsetEncodingAlgorithm;
     }
 
     protected function configure()

@@ -30,6 +30,6 @@ It is the same data of the original project
 You can test the OffsetEncodingAlgorithm Class with:
 
 ```bash
-php bin/console test
+php bin/console bin/phpunit tests
 ```
-but it is already test in the two commands.
+
