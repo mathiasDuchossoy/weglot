@@ -9,8 +9,16 @@ PHP >= 7.2.5
 ## Installation
 
 ```bash
+cp .env.dist .env.local
+mkdir config/translate
 composer install
 ```
+
+Add the 'key.json' file in 'config/translate' directory.
+
+Give the good values in the .env.local
+
+
 
 ## Usage
 
