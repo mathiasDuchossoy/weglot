@@ -8,7 +8,7 @@ use Google\Cloud\Translate\V3\SupportedLanguage;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
 use Google\Cloud\Translate\V3\TranslationServiceClient as TranslateClient;
 
-class Translate
+class Translate extends AbstractTranslate
 {
     /**
      * @var TranslateClient
@@ -33,10 +33,8 @@ class Translate
 
     public function translate(string $sentence, string $sourceLanguage, string $targetLanguage, array $glossary = null)
     {
-        foreach ($glossary as $item) {
-            $key = array_key_first($item);
-            $sentence = str_replace($key, '<span class="notranslate">' . $key . '</span>', $sentence);
-        }
+        $sentence = $this->addNoTranslateBalises($glossary, $sentence);
+
         try {
             $contents = [$sentence];
 
@@ -68,11 +66,8 @@ class Translate
             $translations = $useGlossary ? $result->getGlossaryTranslations() : $result->getTranslations();
             foreach ($translations as $translation) {
                 $translatedText = $translation->getTranslatedText();
-                foreach ($glossary as $item) {
-                    $key = array_key_first($item);
-                    $translatedText = str_replace('<span class="notranslate">' . $key . '</span>', $item[$key], $translatedText);
-                }
-                $sentenceArray[] = $translatedText;
+
+                $sentenceArray[] = $this->removeNoTranslateBalises($glossary, $translatedText);
             }
         } finally {
             $this->client->close();

@@ -3,8 +3,7 @@
 namespace App\Command;
 
 use App\Service\OffsetEncodingAlgorithm;
-//use App\Service\Translate;
-use App\Service\TranslateV2 as Translate;
+use App\Service\Translate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,7 +55,6 @@ class TranslateCommand extends Command
                 $io->error('ko');
             }
         }
-//        exit();
 
         $getToTranslate = [
             ['Hello', 'en', 'fr', ['Salut'], []],
@@ -70,8 +68,6 @@ class TranslateCommand extends Command
 
         foreach ($getToTranslate as $item) {
             $sentence = $this->translate->translate($item[0], $item[1], $item[2], $item[4]);
-
-            var_dump($sentence);
 
             if ($item[3] === $sentence) {
                 $io->success('ok');

@@ -9,11 +9,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-//use App\Service\Translate;
-
-class TranslateCommand extends Command
+class TranslateV2Command extends Command
 {
-    protected static $defaultName = 'app:translate';
+    protected static $defaultName = 'app:translateV2';
     /**
      * @var Translate
      */
@@ -57,7 +55,6 @@ class TranslateCommand extends Command
                 $io->error('ko');
             }
         }
-//        exit();
 
         $getToTranslate = [
             ['Hello', 'en', 'fr', ['Salut'], []],
