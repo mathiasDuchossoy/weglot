@@ -31,7 +31,7 @@ class TranslateV2Command extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Add a short description for your command');
+            ->setDescription('Test with the api google translate v3');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -76,7 +76,7 @@ class TranslateV2Command extends Command
             }
         }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('The test is over.');
 
         return Command::SUCCESS;
     }
