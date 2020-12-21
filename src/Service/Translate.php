@@ -18,33 +18,45 @@ class Translate extends AbstractTranslate
      * @var string
      */
     private $formattedParent;
+    private $apiGoogleTranslateProjectId;
+    private $apiGoogleTranslateLocation;
+    private $apiGoogleTranslateGlossary;
+    /**
+     * @var string
+     */
+    private $glossaryPath;
 
-    public function __construct()
+    public function __construct(
+        $apiGoogleTranslateCreadentialsPath,
+        $apiGoogleTranslateProjectId,
+        $apiGoogleTranslateLocation,
+        $apiGoogleTranslateGlossary
+    )
     {
         $this->client = new TranslateClient([
-            'credentials' => __DIR__ . '/../../config/translate/key.json',
+            'credentials' => __DIR__ . $apiGoogleTranslateCreadentialsPath,
         ]);
 
         $this->formattedParent = $this->client::locationName(
-            'smiling-cistern-299214',
-            'us-central1'
+            $apiGoogleTranslateProjectId,
+            $apiGoogleTranslateLocation
+        );
+
+        $this->glossaryPath = $this->client::glossaryName(
+            $apiGoogleTranslateProjectId,
+            $apiGoogleTranslateLocation,
+            $apiGoogleTranslateGlossary
         );
     }
 
-    public function translate(string $sentence, string $sourceLanguage, string $targetLanguage, array $glossary = null)
+    public function translate(string $sentence, string $sourceLanguage, string $targetLanguage, array $glossary = null): array
     {
         $sentence = $this->addNoTranslateBalises($glossary, $sentence);
 
         try {
             $contents = [$sentence];
 
-            $glossaryPath = $this->client::glossaryName(
-                'smiling-cistern-299214',
-                'us-central1',
-                'my_en_fr_glossary'
-            );
-
-            $response = $this->client->getGlossary($glossaryPath);
+            $response = $this->client->getGlossary($this->glossaryPath);
             $optionArgs = [
                 'sourceLanguageCode' => $sourceLanguage,
             ];
@@ -53,7 +65,7 @@ class Translate extends AbstractTranslate
             if ($sourceLanguage === $response->getLanguagePair()->getSourceLanguageCode()
                 && $targetLanguage === $response->getLanguagePair()->getTargetLanguageCode()) {
                 $glossaryConfig = new TranslateTextGlossaryConfig();
-                $glossaryConfig->setGlossary($glossaryPath);
+                $glossaryConfig->setGlossary($this->glossaryPath);
                 $glossaryConfig->setIgnoreCase(true);
                 $optionArgs['glossaryConfig'] = $glossaryConfig;
                 $useGlossary = true;
@@ -78,11 +90,8 @@ class Translate extends AbstractTranslate
 
     /**
      * Return bool to know if language pair is supported.
-     * @param string $sourceLanguage
-     * @param string $targetLanguage
-     * @return bool
      */
-    public function isSupported(string $sourceLanguage, string $targetLanguage)
+    public function isSupported(string $sourceLanguage, string $targetLanguage): bool
     {
         try {
             $supportedLanguages = $this->client->getSupportedLanguages($this->formattedParent);

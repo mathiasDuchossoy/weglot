@@ -13,10 +13,10 @@ class TranslateV2 extends AbstractTranslate
      */
     private $client;
 
-    public function __construct()
+    public function __construct($apiGoogleTranslateKey)
     {
         $this->client = new TranslateClient([
-            'key' => '',
+            'key' => $apiGoogleTranslateKey,
         ]);
     }
 
